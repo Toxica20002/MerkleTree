@@ -28,9 +28,7 @@ import Dropzone from 'react-dropzone';
 import Web3 from 'web3';
 import {
   abi,
-  AppMode,
   COLOR,
-  currentMode,
   REQUIRED_SECTION_MARK,
 } from '../../constants';
 import { downloadFile } from '../../libs/download';
@@ -338,19 +336,9 @@ class Issue extends React.Component<Props, IState> {
         let componentValue: string = '';
         const credentialID= fileList[i].name.split('_');
         // citizenId as unknown as string;
-        switch (currentMode) {
-          case AppMode.alternative:
-            // Alterntive
-            console.log('This is Alternative way');
-            // componentValue = citizenId + (fileContent as string);
-            componentValue = credentialID[0]   + (fileContent as string);
-            break;
-          case AppMode.thesis:
-            console.log('This is Thesis mode');
-           // componentValue = (citizenId as unknown as string) + citiSel + (fileContent as string); //Dùng Tenfile để xác nhận credentialID và hash chung vs CitiSel +fileContent
-           componentValue = credentialID[0] as string  + citiSel + (fileContent as string);
-           break;
-        }
+        console.log('This is Thesis mode');
+        // componentValue = (citizenId as unknown as string) + citiSel + (fileContent as string); //Dùng Tenfile để xác nhận credentialID và hash chung vs CitiSel +fileContent
+        componentValue = credentialID[0] as string  + citiSel + (fileContent as string);
 
         const hashOfComponent = '0x' + SHA256(componentValue).toString(); // Hash
         console.log('ISSUE - hashOfComponent: ', hashOfComponent);
@@ -491,25 +479,10 @@ class Issue extends React.Component<Props, IState> {
         transactionHash: this.props.transactionHash,
         contractAddress,
         credentialID,
+        totalOpinions,
+        countOfDisagree,
+        countOfAgree,
       };
-
-    
-
-      switch (currentMode) {
-        case AppMode.alternative:
-          studentReceipt = {
-            ...studentReceipt,
-            citizenId,
-          };
-          break;
-        case AppMode.thesis:
-          studentReceipt = {
-            ...studentReceipt,
-            totalOpinions,
-            countOfDisagree,
-            countOfAgree,
-          };
-      }
 
       studentReceipt = {
         ...studentReceipt,
@@ -698,21 +671,10 @@ catch(error){
     try {
       this.setState({ waitingForFileUpload: true });
       const revokingCert = files[0];
-      const { fileContent, citizenId, citiSel, isMandatory } = await extractData(revokingCert);
+      const { fileContent, citizenId, citiSel } = await extractData(revokingCert);
       const credentialID = this.state.credentialID;
-      let componentValue: string = '';
-  
-      switch (currentMode) {
-        case AppMode.alternative:
-          // Alterntive
-          console.log('This is Alternative way');
-          componentValue = citizenId + (fileContent as string);
-          break;
-        case AppMode.thesis:
-          console.log('This is Thesis mode');
-          componentValue = (citizenId as unknown as string) + citiSel + (fileContent as string);
-          break;
-      }
+      console.log('This is Thesis mode');
+      const componentValue = (citizenId as unknown as string) + citiSel + (fileContent as string);
   
       const revokingCertHash = '0x' + SHA256(componentValue).toString(); // Hash
       this.setState({

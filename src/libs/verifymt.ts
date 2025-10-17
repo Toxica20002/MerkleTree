@@ -1,6 +1,5 @@
 import keccak256 from 'keccak256';
 
-import { AppMode, currentMode } from '../constants';
 import { buildProoves, buildRootObj } from '../services/merkletreeUtils';
 
 import MerkleTree from './merkletreejs/merkletree';
@@ -20,50 +19,30 @@ export const verify = async (
 ) => {
   try {
     const hashedLeaf = buf2hex(keccak256(leaf));
-    let verified;
-    switch (currentMode) {
-      case AppMode.alternative:
-        console.log(
-          `proof:`,
-          proof,
-          `hashLeaf: ${hashedLeaf}`,
-          `processCitizenId: ${processedCitizenId}`,
-        );
-        verified = await MyContract.methods
-          .alternativeVerify(proof, hashedLeaf, processedCitizenId)
-          .call()
-          .catch((err) => {
-            console.log(err);
-            return;
-          });
-        break;
-      case AppMode.thesis:
-        console.log(
-          `proof:`,
-          proof,
-          `processCitizenId: ${processedCitizenId}`,
-          `citiSel: ${citiSel}`,
-          `totalOpinions: ${totalOpinions}`,
-          `countOfDisagree: ${countOfDisagree}`,
-          `countOfAgree: ${countOfAgree}`,
-        );
-        verified = await MyContract.methods
-          .verifyThesis(
-            proof,
-            hashedLeaf,
-            processedCitizenId,
-            citiSel * 10,
-            totalOpinions,
-            countOfDisagree,
-            countOfAgree,
-          )
-          .call()
-          .catch((err) => {
-            console.log(err);
-            return;
-          });
-        break;
-    }
+    console.log(
+      `proof:`,
+      proof,
+      `processCitizenId: ${processedCitizenId}`,
+      `citiSel: ${citiSel}`,
+      `totalOpinions: ${totalOpinions}`,
+      `countOfDisagree: ${countOfDisagree}`,
+      `countOfAgree: ${countOfAgree}`,
+    );
+    const verified = await MyContract.methods
+      .verifyThesis(
+        proof,
+        hashedLeaf,
+        processedCitizenId,
+        citiSel * 10,
+        totalOpinions,
+        countOfDisagree,
+        countOfAgree,
+      )
+      .call()
+      .catch((err) => {
+        console.log(err);
+        return;
+      });
     return verified;
   } catch (e) {
     console.log(e);

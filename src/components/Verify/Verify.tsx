@@ -19,7 +19,7 @@ import { Animated } from 'react-animated-css';
 import Dropzone from 'react-dropzone';
 import Web3 from 'web3';
 
-import { abi, AppMode, COLOR, currentMode, REQUIRED_SECTION_MARK } from '../../constants';
+import { abi, COLOR, REQUIRED_SECTION_MARK } from '../../constants';
 import {
   getInstituteInfo,
   // getRoot,
@@ -499,18 +499,10 @@ class Verify extends React.Component<Props, IState> {
         // Idea: generate 2 combinations (0 + content) and (1 + content)
         // hash and try to find it in the receipt
 
-        switch (currentMode) {
-          case AppMode.alternative:
-            const hashedCert = '0x' + SHA256(citizenId + (fileContent as string)).toString();
-            hashedUploadFileArray.push(hashedCert);
-            break;
-          case AppMode.thesis:
-          //  let hashedCertThesis = '0x' + SHA256((citizenId as unknown as string) + citiSel + (fileContent as string)).toString();
+        //  let hashedCertThesis = '0x' + SHA256((citizenId as unknown as string) + citiSel + (fileContent as string)).toString();
 
-            const hashedCertThesis = '0x' + SHA256(credentialID[0] as string + citiSel + (fileContent as string)).toString();
-            hashedUploadFileArray.push(hashedCertThesis);
-            break;
-        }
+        const hashedCertThesis = '0x' + SHA256(credentialID[0] as string + citiSel + (fileContent as string)).toString();
+        hashedUploadFileArray.push(hashedCertThesis);
       }
     } catch (e) {
       this.setState({

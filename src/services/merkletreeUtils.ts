@@ -1,12 +1,10 @@
 import keccak256 from 'keccak256';
 import Web3 from 'web3';
 import {
-  AppMode,
   citiSel,
   citizenId,
   countOfAgree,
   countOfDisagree,
-  currentMode,
   totalOpinions,
 } from '../constants';
 import { IMerkleTreeNode } from '../models/MerkleTreeNode.model';
@@ -21,21 +19,13 @@ export const buildProoves = (
   const proofs: IMerkleTreeNode[] = [];
   for (let i = 0; i < leaves.length; i++) {
     const proof = tree.getProof(keccak256(data[i].hash)).map(({ data }) => {
-      switch (currentMode) {
-        case AppMode.alternative:
-          return {
-            hash: buf2hex(data.hash),
-            citizenId: data.citizenId,
-          };
-        case AppMode.thesis:
-          return {
-            hash: buf2hex(data.hash),
-            citizenId: data.citizenId,
-            citiSel: data.citiSel,
-            countOfDisagree: data.countOfDisagree,
-            countOfAgree: data.countOfAgree,
-          };
-      }
+      return {
+        hash: buf2hex(data.hash),
+        citizenId: data.citizenId,
+        citiSel: data.citiSel,
+        countOfDisagree: data.countOfDisagree,
+        countOfAgree: data.countOfAgree,
+      };
     });
     proofs.push(proof);
   }
@@ -44,32 +34,16 @@ export const buildProoves = (
 
 export const buildRootObj = (root: any, buf2hex: any) => {
   const web3 = new Web3();
-  let newRoot: string | null;
-  switch (currentMode) {
-    case AppMode.alternative:
-      newRoot = web3.utils.encodePacked(
-        {
-          value: buf2hex(root.hash),
-          type: 'bytes32',
-        },
-        { value: Math.floor(root.citizenId).toString(), type: 'int256' },
-      );
-      break;
-    case AppMode.thesis:
-      newRoot = web3.utils.encodePacked(
-        {
-          value: buf2hex(root.hash),
-          type: 'bytes32',
-        },
-        { value: root.citizenId, type: 'int256' },
-        { value: root.citiSel, type: 'int256' },
-        { value: root.countOfDisagree, type: 'int256' },
-        { value: root.countOfAgree, type: 'int256' },
-      );
-      break;
-    default:
-      newRoot = '';
-  }
+  const newRoot = web3.utils.encodePacked(
+    {
+      value: buf2hex(root.hash),
+      type: 'bytes32',
+    },
+    { value: root.citizenId, type: 'int256' },
+    { value: root.citiSel, type: 'int256' },
+    { value: root.countOfDisagree, type: 'int256' },
+    { value: root.countOfAgree, type: 'int256' },
+  );
   console.log(newRoot);
   return buf2hex(keccak256(newRoot || ''));
 };

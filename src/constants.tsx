@@ -1,7 +1,6 @@
 export const REQUIRED_SECTION_MARK = '(R)';
 
 export enum AppMode {
-  alternative,
   thesis
 }
 
