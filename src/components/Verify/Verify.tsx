@@ -500,12 +500,6 @@ class Verify extends React.Component<Props, IState> {
         // hash and try to find it in the receipt
 
         switch (currentMode) {
-          case AppMode.normal:
-            const hashedCertMandatory = '0x' + SHA256((citizenId as unknown as string) + true + (fileContent as string)).toString();
-            const hashedCertOptional = '0x' + SHA256((citizenId as unknown as string) + false + (fileContent as string)).toString();
-            hashedUploadFileArray.push(hashedCertMandatory);
-            hashedUploadFileArray.push(hashedCertOptional);
-            break;
           case AppMode.alternative:
             const hashedCert = '0x' + SHA256(citizenId + (fileContent as string)).toString();
             hashedUploadFileArray.push(hashedCert);

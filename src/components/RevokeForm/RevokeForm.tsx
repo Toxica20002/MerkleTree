@@ -1,5 +1,5 @@
-import { Form, Input } from 'antd';
 import { LockOutlined } from '@ant-design/icons';
+import { Form, Input } from 'antd';
 import React from 'react';
 
 const FormItem = Form.Item;
@@ -10,7 +10,7 @@ interface Props {
 }
 
 class RevokeForm extends React.Component<Props> {
-  //TODO: handle on change
+  // TODO: handle on change
 
   // formRef = React.createRef<FormInstance>();
   handleSubmit = (e: { preventDefault: () => void; }) => {
@@ -30,7 +30,7 @@ class RevokeForm extends React.Component<Props> {
 
   render() {
     return (
-      //TODO: add handle on change onChange={this.handleSubmit}
+      // TODO: add handle on change onChange={this.handleSubmit}
       <Form className="login-form" onValuesChange={this.onChange}>
         <FormItem 
           name="reason"

@@ -1,7 +1,9 @@
-import MerkleTree from './merkletreejs/merkletree';
 import keccak256 from 'keccak256';
+
 import { AppMode, currentMode } from '../constants';
 import { buildProoves, buildRootObj } from '../services/merkletreeUtils';
+
+import MerkleTree from './merkletreejs/merkletree';
 
 const buf2hex = (x) => `0x${x.toString('hex')}`;
 
@@ -20,15 +22,6 @@ export const verify = async (
     const hashedLeaf = buf2hex(keccak256(leaf));
     let verified;
     switch (currentMode) {
-      case AppMode.normal:
-        verified = await MyContract.methods
-          .verify(proof, hashedLeaf, isMandatory ? 1 : 0, !isMandatory ? 1 : 0)
-          .call()
-          .catch((err) => {
-            console.log(err);
-            return;
-          });
-        break;
       case AppMode.alternative:
         console.log(
           `proof:`,
@@ -59,7 +52,7 @@ export const verify = async (
             proof,
             hashedLeaf,
             processedCitizenId,
-            citiSel*10,
+            citiSel * 10,
             totalOpinions,
             countOfDisagree,
             countOfAgree,
@@ -79,14 +72,14 @@ export const verify = async (
 };
 
 export const createMT = (data) => {
-  //Quan - Task 1: Do some console logs
+  // Quan - Task 1: Do some console logs
   const leaves = data
     .map((x) => ({
       hash: keccak256(x.hash),
-      //numbMandatoryComps: x.isMandatory ? 1 : 0,
+      // numbMandatoryComps: x.isMandatory ? 1 : 0,
       // numbOptionalComps: !x.isMandatory ? 1 : 0,
       citizenId: x.citizenId,
-      citiSel: x.citiSel*10,
+      citiSel: x.citiSel * 10,
       countOfDisagree: x.countOfDisagree,
       countOfAgree: x.countOfAgree,
     }))
@@ -96,17 +89,15 @@ export const createMT = (data) => {
   const root = tree.getRoot();
   const proofs: any[] = buildProoves(leaves, tree, data, buf2hex, keccak256);
   console.log(root);
-  //Root of AMT
+  // Root of AMT
   const newRoot = buildRootObj(root, buf2hex);
 
-  const totalOpinions =
-    root.countOfDisagree +
-    root.countOfAgree;
+  const totalOpinions = root.countOfDisagree + root.countOfAgree;
   return {
     proofs,
     MTRoot: newRoot,
-    //NumbMandatory: root.numbMandatoryComps,
-    //NumbOptional: root.numbOptionalComps,
+    // NumbMandatory: root.numbMandatoryComps,
+    // NumbOptional: root.numbOptionalComps,
     citizenId: root.citizenId,
     citiSel: root.citiSel,
     totalOpinions: totalOpinions || 0,

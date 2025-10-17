@@ -1,12 +1,12 @@
-import Web3 from 'web3';
 import keccak256 from 'keccak256';
+import Web3 from 'web3';
 import {
   AppMode,
+  citiSel,
+  citizenId,
   countOfAgree,
   countOfDisagree,
   currentMode,
-  citiSel,
-  citizenId,
   totalOpinions,
 } from '../constants';
 import { IMerkleTreeNode } from '../models/MerkleTreeNode.model';
@@ -22,12 +22,6 @@ export const buildProoves = (
   for (let i = 0; i < leaves.length; i++) {
     const proof = tree.getProof(keccak256(data[i].hash)).map(({ data }) => {
       switch (currentMode) {
-        case AppMode.normal:
-          return {
-            hash: buf2hex(data.hash),
-            numbMandatoryComps: data.numbMandatoryComps,
-            numbOptionalComps: data.numbOptionalComps,
-          };
         case AppMode.alternative:
           return {
             hash: buf2hex(data.hash),
@@ -50,18 +44,8 @@ export const buildProoves = (
 
 export const buildRootObj = (root: any, buf2hex: any) => {
   const web3 = new Web3();
-  let newRoot: string | null = '';
+  let newRoot: string | null;
   switch (currentMode) {
-    case AppMode.normal:
-      newRoot = web3.utils.encodePacked(
-        {
-          value: buf2hex(root.hash),
-          type: 'bytes32',
-        },
-        { value: root.numbMandatoryComps, type: 'int32' },
-        { value: root.numbOptionalComps, type: 'int32' },
-      );
-      break;
     case AppMode.alternative:
       newRoot = web3.utils.encodePacked(
         {
@@ -122,7 +106,7 @@ export const getAllContractData = async (MyContract, sections) => {
 
 export const validateReceipt = async (MyContract, receiptContent) => {
   let isValid: boolean = true;
-  for (let property of Object.keys(receiptContent)) {
+  for (const property of Object.keys(receiptContent)) {
     let data;
     switch (property) {
       case totalOpinions:
@@ -138,33 +122,15 @@ export const validateReceipt = async (MyContract, receiptContent) => {
         break;
     }
 
-    if (data !== undefined)
-      isValid = data == receiptContent[property]
-    else {
+    if (data !== undefined) {
+      isValid = data === receiptContent[property];
+    } else {
       // skip properties not in contract
       continue;
     }
-    console.log(property, data, receiptContent[property])
-    if (!isValid) break;
-  };
+    console.log(property, data, receiptContent[property]);
+    if (!isValid) { break; }
+  }
 
   return isValid;
 };
-
-// export const getCitizenId = async MyContract => {
-//   const result = await MyContract.methods.ProcessCitizenId().call();
-//   console.log('getCitizenId func: ', result);
-//   return result;
-// }
-
-// export const getcitiSel = async MyContract => {
-//   const result = await MyContract.methods.CitiSel().call();
-//   console.log('getcitiSel func: ', result);
-//   return result;
-// }
-
-// export const getTotalOpinions = async MyContract => {
-//   const result = await MyContract.methods.TotalOpinions().call();
-//   console.log('getTotalOpinions func: ', result);
-//   return result;
-// }

@@ -7,12 +7,6 @@ export const combineData = (
   right: IMerkleTreeNode,
 ): Partial<IMerkleTreeNode> => {
   switch (currentMode) {
-    case AppMode.normal:
-      return {
-        hash,
-        numbMandatoryComps: left.numbMandatoryComps + right.numbMandatoryComps,
-        numbOptionalComps: left.numbOptionalComps + right.numbOptionalComps,
-      };
     case AppMode.alternative:
       return {
         hash,
@@ -20,7 +14,7 @@ export const combineData = (
           Math.floor(Math.sqrt(left.citizenId * 10000)) +
           Math.floor(Math.sqrt(right.citizenId * 10000)),
       };
-    case AppMode.thesis: //Root Object
+    case AppMode.thesis: // Root Object
       return {
         hash,
         citizenId: left.citizenId + right.citizenId,

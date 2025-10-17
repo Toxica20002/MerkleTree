@@ -1,8 +1,8 @@
 import { Button, Col, Divider, Drawer, List, Row } from 'antd';
+import { format } from 'date-fns'
 import PropTypes from 'prop-types';
 import React, { CSSProperties } from 'react';
 import Pdf from '../Pdf/Pdf';
-import { format } from 'date-fns'
 
 const pStyle = {
   fontSize: 16,
@@ -102,7 +102,7 @@ class CustomDrawer extends React.Component<Props> {
               ]}
             >
               <List.Item.Meta
-                //avatar={<Avatar src={logoUrl} />}
+                // avatar={<Avatar src={logoUrl} />}
                 title={<a href="#" onClick={(e) => e.preventDefault()}
                 style={{ pointerEvents: 'none', color: '#1890ff' }}>Contract address: {address}</a>}
                 // description={`Description: ${description}`}

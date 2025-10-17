@@ -1,15 +1,7 @@
-import React, { Component } from 'react';
 import { FileTextOutlined,SearchOutlined } from '@ant-design/icons';
-import {   Alert,Row, Tag, Select, Button, notification } from 'antd';
-import { Animated } from 'react-animated-css';
-import Dropzone from 'react-dropzone';
-import './audit.css';
-import { COLOR, abi, countOfDisagree, countOfAgree, citiSel, citizenId, totalOpinions } from '../../constants';
-import { ISection } from '../../models/section.model';
-import Web3 from 'web3';
-import { getAllContractData } from '../../services/merkletreeUtils';
+import {   Alert,Button, notification, Row, Select, Tag } from 'antd';
+import JSZip from 'jszip';
 import Lottie from 'lottie-react-web';
-import { firework } from './firework';
 import {
   decodePDFRawStream,
   PDFArray,
@@ -20,7 +12,15 @@ import {
   PDFRawStream,
   PDFStream, PDFString,
 } from 'pdf-lib';
-import JSZip from 'jszip';
+import React, { Component } from 'react';
+import { Animated } from 'react-animated-css';
+import Dropzone from 'react-dropzone';
+import Web3 from 'web3';
+import { abi, citiSel, citizenId, COLOR, countOfAgree, countOfDisagree, totalOpinions } from '../../constants';
+import { ISection } from '../../models/section.model';
+import { getAllContractData } from '../../services/merkletreeUtils';
+import './audit.css';
+import { firework } from './firework';
 
 
 const { Option } = Select;
@@ -71,7 +71,7 @@ class Audit extends Component<any, IState> {
 
   state = {
     sections: [] as ISection[],
-    //selectedSectionIds: '',
+    // selectedSectionIds: '',
     selectedSectionIds: [],
     receipt: null as any,
     myContract: undefined,
@@ -195,10 +195,10 @@ class Audit extends Component<any, IState> {
     files = jsonFiles;
 
     try{
-        let fileContent = (await Audit.readUploadedFileAsText(
+        const fileContent = (await Audit.readUploadedFileAsText(
           files[0],
         )) as string;
-        let receipt = JSON.parse(fileContent as string);
+        const receipt = JSON.parse(fileContent as string);
         const optionalSections: any[] = []
         for (const property in receipt) {
           const value = receipt[property]
@@ -211,14 +211,14 @@ class Audit extends Component<any, IState> {
         const { web3 } = this.state;
         const MyContract = new web3.eth.Contract(
           abi,
-          receipt.contractAddress, //get contract address to find MTroot in contract
+          receipt.contractAddress, // get contract address to find MTroot in contract
         );
   
         if (optionalSections.length>0) {
           this.setState({
             sections: optionalSections,
             receipt,
-            //selectedSectionIds: '',
+            // selectedSectionIds: '',
             selectedSectionIds: [],
             myContract: MyContract
           });
@@ -243,7 +243,7 @@ class Audit extends Component<any, IState> {
     this.setState({
       selectedSectionIds: sectionSelected,
       isButtonDisabled: sectionSelected.length <= 0,
-      //TODO: Reset Passed/Failed Status when remove/select auditable data(s) -  9 Nov 2023
+      // TODO: Reset Passed/Failed Status when remove/select auditable data(s) -  9 Nov 2023
       showTable: sectionSelected.length > 0,
       status: 'Loading...',
       result: {},
@@ -253,7 +253,7 @@ class Audit extends Component<any, IState> {
   setData = (data: any) => {
     const { result } = this.state
     Object.assign(result, data)
-    this.setState({ result: result })
+    this.setState({ result })
   }
 
 
@@ -263,7 +263,7 @@ class Audit extends Component<any, IState> {
     const { selectedSectionIds, receipt, myContract } = this.state;
 
     const contractResults = await getAllContractData(myContract, selectedSectionIds)
-    for (let key of Object.keys(contractResults)) {
+    for (const key of Object.keys(contractResults)) {
       const result = contractResults[key];
       const receiptData = receipt[key];
       if (result == receipt[key]) {

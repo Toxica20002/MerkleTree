@@ -1,12 +1,12 @@
+import { DownloadOutlined,FileTextOutlined } from '@ant-design/icons';
+import { Button, notification, Row, Select, Tag } from 'antd';
 import React, { Component } from 'react';
-import { FileTextOutlined,DownloadOutlined } from '@ant-design/icons';
-import { Row, Tag, Select, Button, notification } from 'antd';
 import { Animated } from 'react-animated-css';
 import Dropzone from 'react-dropzone';
-import './select.css';
-import { downloadFile } from '../../libs/download';
 import { COLOR } from '../../constants';
+import { downloadFile } from '../../libs/download';
 import { ISection } from '../../models/section.model';
+import './select.css';
 
 const { Option } = Select;
 
@@ -63,10 +63,10 @@ class SelectAAA extends Component<any, IState> {
 
   onDrop = async (files) => {
     if (files.length > 0) {
-      let fileContent = (await SelectAAA.readUploadedFileAsText(
+      const fileContent = (await SelectAAA.readUploadedFileAsText(
         files[0],
       )) as string;
-      let receipt = JSON.parse(fileContent as string);
+      const receipt = JSON.parse(fileContent as string);
       const optionalSections = receipt.sections?.filter(
         (section) => section.mandatory === false,
       );
@@ -94,10 +94,10 @@ class SelectAAA extends Component<any, IState> {
 
   onDownload = () => {
     const sectionSelected = this.state.selectedSectionIds;
-    let receipt = this.state.receipt;
+    const receipt = this.state.receipt;
     console.log("Select - Receip data: ",receipt);
     let fullSelectedSections;
-    let receiptStudentID= receipt.credentialID;
+    const receiptStudentID= receipt.credentialID;
     const filename = `${receiptStudentID}_SelectiveDisclosureReceipt.json`;
 
     if (receipt != null && sectionSelected.length) {
@@ -123,7 +123,7 @@ class SelectAAA extends Component<any, IState> {
     if (!fullSelectedSections || !receipt) {
       return;
     }
-    var clone = JSON.parse(JSON.stringify(receipt));
+    const clone = JSON.parse(JSON.stringify(receipt));
     clone.sections = fullSelectedSections;
     const selectiveReceipt = new Blob([JSON.stringify(clone)], {
       type: 'json',
@@ -133,7 +133,7 @@ class SelectAAA extends Component<any, IState> {
 
   render() {
     const { sections, isButtonDisabled } = this.state;
-    //TODO: clear selection
+    // TODO: clear selection
     return (
       <div style={{ display: 'grid' }}>
         <div style={{ textAlign: 'center', marginBottom: '20px' }}>

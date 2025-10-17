@@ -339,12 +339,6 @@ class Issue extends React.Component<Props, IState> {
         const credentialID= fileList[i].name.split('_');
         // citizenId as unknown as string;
         switch (currentMode) {
-          case AppMode.normal:
-            console.log('This is Normal way');
-            componentValue =
-           // (citizenId as unknown as string) + isMandatory + (fileContent as string); // cong MSSV + IsRequire + Noi Dung PDF
-           credentialID[0]  + isMandatory + (fileContent as string); // cong MSSV + IsRequire + Noi Dung PDF
-            break;
           case AppMode.alternative:
             // Alterntive
             console.log('This is Alternative way');
@@ -502,13 +496,6 @@ class Issue extends React.Component<Props, IState> {
     
 
       switch (currentMode) {
-        case AppMode.normal:
-          studentReceipt = {
-            ...studentReceipt,
-            // totalMandatory: NumbMandatory,
-            // totalOptionals: NumbOptional,
-          };
-          break;
         case AppMode.alternative:
           studentReceipt = {
             ...studentReceipt,
@@ -716,11 +703,6 @@ catch(error){
       let componentValue: string = '';
   
       switch (currentMode) {
-        case AppMode.normal:
-          console.log('This is Normal way');
-           componentValue =
-          (citizenId as unknown as string) + isMandatory + (fileContent as string); // cong MSSV + IsRequire + Noi Dung PDF
-          break;
         case AppMode.alternative:
           // Alterntive
           console.log('This is Alternative way');
